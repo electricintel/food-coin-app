@@ -1,14 +1,15 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-content>
+	<div class="qrcode-box">&nbsp;</div>
+	<p class="qrcode-subtitle">Scan QR Code</p>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+	<ion-card class="password-modal"
+		[hidden]="!(account.qrCode && account.password.length !== 6)">
+		<ion-card-content>
+			<ion-card-title>
+				Enter your 6 digit password to unlock your account
+			</ion-card-title>
+
+			<ion-input class="password-number-input" type="number" [(ngModel)]="account.password"></ion-input>
+		</ion-card-content>
+	</ion-card>
 </ion-content>

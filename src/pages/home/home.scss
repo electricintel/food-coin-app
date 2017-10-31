@@ -1,3 +1,33 @@
 page-home {
+	&, ion-app, ion-content {
+		background-color: transparent !important;
+	}
 
+	ion-content {
+	}
+
+	.qrcode-box {
+		border: 10px dashed black;
+		width: 60vw;
+		height: 60vw;
+		margin: calc((90vh - 60vw) / 2) 20vw 10px;
+	}
+
+	.qrcode-subtitle {
+		width: 100%;
+		text-align: center;
+	}
+
+	.password-modal {
+		position: absolute;
+		top: 35vh;
+		width: 80vw;
+		height: 30vh;
+		margin: 0 10vw;
+		text-align: center;
+	}
+
+	.password-number-input {
+		border: 1px solid;
+	}
 }
