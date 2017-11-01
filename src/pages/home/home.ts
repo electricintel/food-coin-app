@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 
 import { ToastController } from 'ionic-angular';
 import { Diagnostic } from '@ionic-native/diagnostic';
@@ -14,29 +14,31 @@ export class HomePage {
 
 	scanSubscription: any = null;
 	account = {
-		qrCode: 'dsa',
+		qrCode: '',
 		password: '',
 	};
 
 	constructor(
 		public navCtrl: NavController,
-        public toastCtrl: ToastController,
+		public toastCtrl: ToastController,
 		private diagnostic: Diagnostic,
 		private qrScanner: QRScanner,
-		private vibration: Vibration
+		private vibration: Vibration,
+		private platform: Platform,
 	) {
 	}
 
 	ionViewDidLoad() {
-	    this.checkCameraPermissions()
-	    	.then(() => this.initializeQRCameraPreview())
-	    	.catch((errorMessage) => {
+		this.platform.ready()
+			.then(() => this.checkCameraPermissions())
+			.then(() => this.initializeQRCameraPreview())
+			.catch((errorMessage) => {
 				this.toastCtrl.create({
-				    message: errorMessage, 
-				    position: 'bottom',
-				    duration: 5000
+					message: errorMessage, 
+					position: 'bottom',
+					duration: 5000
 				}).present()
-	    	});
+			});
 	}
 
 	ionViewWillLeave() {
@@ -49,16 +51,16 @@ export class HomePage {
 	 
 	checkCameraPermissions(): Promise<any> {
 		return this.diagnostic.isCameraAuthorized().then((authorized) => {
-		    if (authorized) {
-		        return;
-		    }
+			if (authorized) {
+				return;
+			}
 
-	        return this.diagnostic.requestCameraAuthorization().then((status) => {
-	            if (status !== this.diagnostic.permissionStatus.GRANTED) {
-	                return Promise.reject('Cannot access camera');
-	            }
-	        });
-        });
+			return this.diagnostic.requestCameraAuthorization().then((status) => {
+				if (status !== this.diagnostic.permissionStatus.GRANTED) {
+					return Promise.reject('Cannot access camera');
+				}
+			});
+		});
 	}
 
 	initializeQRCameraPreview() {

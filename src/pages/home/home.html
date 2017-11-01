@@ -3,7 +3,7 @@
 	<p class="qrcode-subtitle">Scan QR Code</p>
 
 	<ion-card class="password-modal"
-		[hidden]="!(account.qrCode && account.password.length !== 6)">
+		[hidden]="!(account.qrCode.length <= 1 && account.password.length !== 6)">
 		<ion-card-content>
 			<ion-card-title>
 				Enter your 6 digit password to unlock your account
