@@ -3,22 +3,39 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { HomePage } from '../pages/home/home';
+import { PlaceholderPage } from '../pages/placeholder/placeholder';
+import { LoginPage } from '../pages/login/login';
+import { AccountProvider } from '../providers/account/account';
+import { DashboardPage } from '../pages/dashboard/dashboard';
+
 @Component({
 	templateUrl: 'app.html'
 })
 export class MyApp {
-	rootPage:any = HomePage;
+	rootPage:any = PlaceholderPage;
 
 	constructor(
-		platform: Platform,
-		statusBar: StatusBar,
-		splashScreen: SplashScreen
+		private platform: Platform,
+		private statusBar: StatusBar,
+		private splashScreen: SplashScreen,
+		private accountProvider: AccountProvider
 	) {
-		platform.ready().then(() => {
-			statusBar.styleDefault();
-			splashScreen.hide();
+		this.platform.ready().then(() => {
+			this.statusBar.styleDefault();
+			this.splashScreen.hide();
+			this.accountProvider.getUser()
+				.then(() => this.loadFirstPage());
 		});
+	}
+
+	loadFirstPage() {
+		console.log(this.accountProvider.user);
+		if (!this.accountProvider.isAuthenticated) {
+			console.log('load Login Page');
+			this.rootPage = LoginPage;
+		} else {
+			this.rootPage = DashboardPage;
+		}
 	}
 }
 

@@ -1,0 +1,26 @@
+<ion-content>
+	<span [hidden]="passwordModel.visible">
+		<div class="qrcode-box">&nbsp;</div>
+		<p class="qrcode-subtitle">Scan QR Code</p>
+	</span>
+
+	<ion-card class="password-modal"
+		[hidden]="!passwordModel.visible">
+		<ion-card-content>
+			<ion-card-title>
+				Enter your 6 digit password to unlock your account
+			</ion-card-title>
+
+			<form (ngSubmit)="login()">
+				<ion-input
+					class="password-number-input"
+					type="password"
+					name="password"
+					[(ngModel)]="passwordModel.password">
+				</ion-input>
+
+				<button type="submit" ion-button color="secondary" full>Login</button>
+			</form>
+		</ion-card-content>
+	</ion-card>
+</ion-content>

@@ -1,9 +1,10 @@
-page-home {
+page-login {
 	&, ion-app, ion-content {
 		background-color: transparent !important;
 	}
 
 	ion-content {
+		overflow: hidden;
 	}
 
 	.qrcode-box {

@@ -1,36 +1,40 @@
-import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { Component, NgZone } from '@angular/core';
+import { NavController, App } from 'ionic-angular';
 
 import { ToastController } from 'ionic-angular';
 import { Diagnostic } from '@ionic-native/diagnostic';
 import { QRScanner } from '@ionic-native/qr-scanner';
 import { Vibration } from '@ionic-native/vibration';
 
-@Component({
-	selector: 'page-home',
-	templateUrl: 'home.html'
-})
-export class HomePage {
+import { MyApp } from '../../app/app.component';
 
+import { AccountProvider } from '../../providers/account/account';
+
+@Component({
+	selector: 'page-login',
+	templateUrl: 'login.html'
+})
+export class LoginPage {
 	scanSubscription: any = null;
-	account = {
-		qrCode: '',
-		password: '',
+
+	passwordModel: any = {
+		visible: false,
+		password: ''
 	};
 
 	constructor(
 		public navCtrl: NavController,
 		public toastCtrl: ToastController,
+		private zone: NgZone,
 		private diagnostic: Diagnostic,
 		private qrScanner: QRScanner,
 		private vibration: Vibration,
-		private platform: Platform,
-	) {
-	}
+		public appCtrl: App,
+		private accountProvider: AccountProvider
+	) {}
 
 	ionViewDidLoad() {
-		this.platform.ready()
-			.then(() => this.checkCameraPermissions())
+		this.checkCameraPermissions()
 			.then(() => this.initializeQRCameraPreview())
 			.catch((errorMessage) => {
 				this.toastCtrl.create({
@@ -51,9 +55,7 @@ export class HomePage {
 	 
 	checkCameraPermissions(): Promise<any> {
 		return this.diagnostic.isCameraAuthorized().then((authorized) => {
-			if (authorized) {
-				return;
-			}
+			if (authorized) { return; }
 
 			return this.diagnostic.requestCameraAuthorization().then((status) => {
 				if (status !== this.diagnostic.permissionStatus.GRANTED) {
@@ -64,16 +66,29 @@ export class HomePage {
 	}
 
 	initializeQRCameraPreview() {
-		this.scanSubscription = this.qrScanner.scan().subscribe((text: string) => {
-			this.account.qrCode = text;
-			this.vibration.vibrate(1000);
-
-			this.qrScanner.pausePreview();
-			this.scanSubscription.unsubscribe();
-			this.scanSubscription = null;
-		});
-
-		// show camera preview
+		this.scanSubscription = this.qrScanner.scan().subscribe((text: string) => this.onQRCodeScan(text));
 		this.qrScanner.show();
+		this.qrScanner.resumePreview();
+	}
+
+	onQRCodeScan(text: string) {
+		this.zone.run(() => {
+			this.passwordModel.visible = true;
+		});
+		this.vibration.vibrate(1000);
+
+		this.qrScanner.pausePreview();
+		this.scanSubscription.unsubscribe();
+		this.scanSubscription = null;
+	}
+
+	login() {
+		this.accountProvider.setUser({
+			id: '123',
+			name: 'Muhammad Dadu'
+		}).then(() => {
+			this.appCtrl.getRootNav().setRoot(MyApp);
+			window.location.reload();
+		});
 	}
 }
