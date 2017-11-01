@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HTTP } from '@ionic-native/http';
 import { NativeStorage } from '@ionic-native/native-storage';
 
 @Injectable()
@@ -8,7 +7,7 @@ export class AccountProvider {
 	user: any = {};
 
 	constructor(
-		public http: Http,
+		public http: HTTP,
 		private nativeStorage: NativeStorage
 	) {}
 

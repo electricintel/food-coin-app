@@ -1,0 +1,42 @@
+<ion-header>
+	<ion-navbar>
+		<ion-title>Give Meals to John Doe</ion-title>
+	</ion-navbar>
+</ion-header>
+
+<ion-content padding>
+	<h3>John Doe's Meals</h3>
+
+	<ion-list [hidden]="userAccount.items.length === 0">
+		<ion-item *ngFor="let item of userAccount.items">
+			<ion-thumbnail item-start>
+				<img src="{{item.image}}">
+			</ion-thumbnail>
+			<h2>{{item.title}}</h2>
+			<p>{{item.description}}</p>
+		</ion-item>
+	</ion-list>
+
+	<p [hidden]="userAccount.items.length > 0">
+		This person has 0 meals
+	</p>
+	
+
+	<h3>Give Local Meals <ion-icon name="ios-navigate-outline"></ion-icon></h3>
+	<ion-card *ngFor="let item of store.items">
+		<img src="{{item.image}}"/>
+		<ion-card-content>
+			<ion-card-title>{{item.title}}</ion-card-title>
+			<p>{{item.description}}</p>
+		</ion-card-content>
+		<ion-item>
+		    <span item-left>&pound; {{item.price}}</span>
+		    <span item-left>(0.1 mi)</span>
+			<button ion-button icon-left clear item-end
+				(click)="purchase(item)">
+				<ion-icon name="cloud-download"></ion-icon>
+				<div>Give</div>
+			</button>
+		</ion-item>
+	</ion-card>
+</ion-content>

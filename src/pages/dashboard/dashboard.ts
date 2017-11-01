@@ -5,10 +5,15 @@ import { Shake } from '@ionic-native/shake';
 import { ToastController } from 'ionic-angular';
 import { QRScanner } from '@ionic-native/qr-scanner';
 import { Vibration } from '@ionic-native/vibration';
+import { TouchID } from '@ionic-native/touch-id';
 
 import { MyApp } from '../../app/app.component';
 
 import { AccountProvider } from '../../providers/account/account';
+import { EathomelyProvider } from '../../providers/eathomely/eathomely';
+
+import { RedeemPage } from '../redeem/redeem';
+import { DonatePage } from '../donate/donate';
 
 @Component({
 	selector: 'page-dashboard',
@@ -17,20 +22,32 @@ import { AccountProvider } from '../../providers/account/account';
 export class DashboardPage {
 	shakeWatcher: any;
 	scanSubscription: any = null;
+	userAccount: any = {
+		items: []
+	};
+	store: any = {
+		items: []
+	};
 
 	constructor(
 		public navCtrl: NavController,
-		private accountProvider: AccountProvider,
 		public appCtrl: App,
-		private shake: Shake,
 		public toastCtrl: ToastController,
+		private accountProvider: AccountProvider,
+		private eathomelyProvider: EathomelyProvider,
+		private shake: Shake,
 		private qrScanner: QRScanner,
 		private vibration: Vibration,
-		private zone: NgZone
+		private zone: NgZone,
+		private touchId: TouchID
 	) {}
 
 	ionViewDidLoad() {
-		this.setupShakeToLogout();
+		this.initializeUserData();
+		this.initializeStore();
+	}
+
+	ionViewWillEnter() {
 		this.initializeQRCameraPreview();
 	}
 
@@ -40,7 +57,6 @@ export class DashboardPage {
 		}
 
 		if (this.scanSubscription) {
-			this.qrScanner.hide();
 			this.scanSubscription.unsubscribe();
 			this.scanSubscription = null;
 		}
@@ -72,13 +88,56 @@ export class DashboardPage {
 	}
 
 	onQRCodeScan(text: string) {
-		// this.zone.run(() => {
-		// 	this.passwordModel.visible = true;
-		// });
 		this.vibration.vibrate(1000);
 
-		// this.qrScanner.pausePreview();
-		// this.scanSubscription.unsubscribe();
-		// this.scanSubscription = null;
+		this.navCtrl.push(DonatePage, {
+			id: text
+		});
+	}
+
+	initializeStore() {
+		this.eathomelyProvider.getItems().then((products) => {
+			products.forEach((item) => {
+				let images = JSON.parse(item.images);
+				this.store.items.push({
+					provider: 'eathomely',
+					id: item.id,
+					title: item.name,
+					image: images[0].secure_url,
+					description: item.description,
+					price: '4.00'
+				});
+			})
+		});
+	}
+
+	initializeUserData() {
+	}
+
+	purchase(item) {
+		this.touchId.isAvailable()
+		.then(() => this.touchId.verifyFingerprint(`Confirm your purchase for ${item.title}`))
+		.catch((error) => {
+			if (error.code === -128) {
+				return Promise.reject('');
+			}
+			Promise.resolve();
+		})
+		.then(() => {
+			this.zone.run(() => {
+				this.userAccount.items.push(item);
+			});
+
+			this.toastCtrl.create({
+				message: `Thank you for purchasing ${item.title}`, 
+				position: 'bottom',
+				duration: 5000
+			}).present();
+		})
+		.catch((error) => console.error(error));
+	}
+
+	redeem(item) {
+		this.navCtrl.push(RedeemPage, item);
 	}
 }

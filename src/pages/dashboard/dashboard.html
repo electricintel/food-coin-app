@@ -1,6 +1,42 @@
 <ion-content>
-	<button (click)="logout()" class="position-fixed">Logout</button>
+	<button (click)="logout()" class="position-fixed logout-button">Logout</button>
 	<div class="qrcode-box">&nbsp;</div>
 
-	<div class="my-account">&nbsp;</div>
+	<div class="my-account" padding>
+		<h3>Your Meals</h3>
+
+		<ion-list [hidden]="userAccount.items.length === 0">
+			<ion-item *ngFor="let item of userAccount.items">
+				<ion-thumbnail item-start>
+					<img src="{{item.image}}">
+				</ion-thumbnail>
+				<h2>{{item.title}}</h2>
+				<p>{{item.description}}</p>
+				<button ion-button clear item-end (click)="redeem(item)">Redeem</button>
+			</ion-item>
+		</ion-list>
+
+		<p [hidden]="userAccount.items.length > 0">
+			Their are 0 items in the account.
+		</p>
+		
+
+		<h3>Local Store Meals <ion-icon name="ios-navigate-outline"></ion-icon></h3>
+		<ion-card *ngFor="let item of store.items">
+			<img src="{{item.image}}"/>
+			<ion-card-content>
+				<ion-card-title>{{item.title}}</ion-card-title>
+				<p>{{item.description}}</p>
+			</ion-card-content>
+			<ion-item>
+			    <span item-left>&pound; {{item.price}}</span>
+			    <span item-left>(0.1 mi)</span>
+				<button ion-button icon-left clear item-end
+					(click)="purchase(item)">
+					<ion-icon name="cloud-download"></ion-icon>
+					<div>Purchase</div>
+				</button>
+			</ion-item>
+		</ion-card>
+	</div>
 </ion-content>

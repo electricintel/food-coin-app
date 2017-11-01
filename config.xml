@@ -3,7 +3,7 @@
     <name>Food Coin</name>
     <description>An alternative to universal credit.</description>
     <author email="muhammad@dadu.co" href="http://dadu.co/">Muhammad Dadu</author>
-    <content original-src="index.html" src="http://192.168.11.73:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -98,4 +98,6 @@
     </plugin>
     <plugin name="cordova-plugin-nativestorage" spec="^2.2.2" />
     <plugin name="cordova-plugin-shake" spec="^0.6.0" />
+    <plugin name="cordova-plugin-advanced-http" spec="^1.7.1" />
+    <plugin name="cordova-plugin-touch-id" spec="^3.2.0" />
 </widget>
