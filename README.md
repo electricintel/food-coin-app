@@ -1,6 +1,10 @@
 > An application to exchange food coins. This can be a beneficial way of giving support to those in need.
 
-[Insert demo pictures]
+## Gifs of flows
+
+![Insert demo pictures](example/login-flow.mov.gif)
+![Insert demo pictures](example/my-account-and-purchase.mov.gif)
+![Insert demo pictures](example/donate.mov.gif)
 
 ## Developer Information
 
