@@ -1,6 +1,6 @@
 > An application to exchange food coins. This can be a beneficial way of giving support to those in need.
 
-You can access the demo using Ionic View App. Use the following ```appId` to view. ```417eb0b9```.
+You can access the demo using Ionic View App. Use the following ```appId``` to view. ```417eb0b9```.
 Ionic View App [Android](https://play.google.com/store/apps/details?id=com.ionicframework.view) and [iOS](https://itunes.apple.com/us/app/ionic-view-test-share-ionic-apps/id1271789931)
 ## Gifs of flows
 
